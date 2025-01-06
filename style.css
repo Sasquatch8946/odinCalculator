@@ -1,0 +1,43 @@
+* {
+    border: solid 2px red;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.frame { 
+    border: solid 5px black;
+    height: 600px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.display {
+    height: 72px;
+    width: auto;
+}
+
+.button-field {
+    display: flex;
+    flex: 1;
+}
+
+.col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.row { 
+    display: flex;
+    flex: 1;
+    /*flex-direction: column;*/
+}
+
+button {
+    flex: 1;
+}
