@@ -10,6 +10,14 @@ function displayResult(result) {
     display.innerText = result;
 }
 
+function calculate() { 
+    let result = operate(storedValues.num1, storedValues.operator, storedValues.num2);
+    storedValues.prevResult = result;
+    displayResult(result);
+    storedValues.num1 = '';
+    storedValues.num2 = '';
+}
+
 function add(num1, num2) {
     return num1 + num2;
 }
@@ -43,13 +51,14 @@ function populateDisplay(event) {
     const btn = event.target;
     const display = document.querySelector("div.display");
     console.log(btn.innerText);
-    display.innerText = btn.innerText;
     if (!storedValues.operator) {
         storedValues.num1 += btn.innerText;
+        display.innerText = storedValues.num1;
         console.log(storedValues);
     }
     else {
         storedValues.num2 += btn.innerText;
+        display.innerText = storedValues.num2;
         console.log(storedValues);
     }
 }
@@ -86,16 +95,14 @@ operatorBtns.forEach((btn) => {
     // this one assumes equals button was NOT used
     else if (storedValues.num1 && storedValues.num2) {
         console.log("previous calculation not finished");
-        let result = operate(storedValues.num1, storedValues.operator, storedValues.num2);
-        storedValues.prevResult = result;
-        displayResult(result);
-        storedValues.num1 = '';
-        storedValues.num2 = '';
+        calculate();
     }
     // this assumes at least a second or nth iteration of the previous scenario
     // user keeps clicking operator without clicking equals sign
     else if (storedValues.operator) {
         console.log("calculating result of ongoing calculation");
+        storedValues.num1 = storedValues.prevResult;
+        calculate();
     }
     else {
         console.log("unhandled case in operator button event")
@@ -109,14 +116,23 @@ operatorBtns.forEach((btn) => {
 // and performs calculation
 const equalBtn = document.querySelector("button.equals");
 equalBtn.addEventListener("click", () => {
-    const display = document.querySelector("div.display");
-    let result = operate(storedValues.num1, storedValues.operator, storedValues.num2);
-    display.innerText = result;
-    storedValues.prevResult = result;
-    console.log(storedValues);
-    storedValues.num1 = ''
-    storedValues.num2 = ''
+    if (!storedValues.num1 && storedValues.operator && storedValues.num2 && storedValues.prevResult) {
+        storedValues.num1 = storedValues.prevResult;
+    }
+    calculate();
     storedValues.operator = null;
+});
+
+const percentageBtn = document.querySelector("button.percent");
+percentageBtn.addEventListener("click", () => {
+    if (storedValues.num1 & !storedValues.num2) {
+        storedValues.num1 = storedValues.num1 / 100;
+        displayResult(storedValues.num1);
+    }
+    else if (storedValues.num1 && storedValues.num2) { 
+        storedValues.num2 = storedValues.num2 / 100;
+        displayResult(storedValues.num2);
+    }
 });
 
 
