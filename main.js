@@ -125,13 +125,18 @@ equalBtn.addEventListener("click", () => {
 
 const percentageBtn = document.querySelector("button.percent");
 percentageBtn.addEventListener("click", () => {
-    if (storedValues.num1 & !storedValues.num2) {
+    console.log("percentage button clicked");
+    console.log(storedValues);
+    if (storedValues.num1 && !storedValues.num2) {
         storedValues.num1 = storedValues.num1 / 100;
         displayResult(storedValues.num1);
     }
     else if (storedValues.num1 && storedValues.num2) { 
         storedValues.num2 = storedValues.num2 / 100;
         displayResult(storedValues.num2);
+    }
+    else {
+        console.log("unhandled case for percentage button");
     }
 });
 
