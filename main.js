@@ -57,7 +57,6 @@ function populateDisplay(event) {
 // add event listeners to number buttons so they populate display
 const btns = document.querySelectorAll("button.number");
 btns.forEach((btn) => {
-    console.log(`btn: ${btn.innerText}`)
     btn.addEventListener("click", populateDisplay);
 });
 
