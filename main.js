@@ -5,6 +5,10 @@ let storedValues = {
     prevResult: null
 }
 
+function isInt(num) {
+    return num % 1 === 0;
+}
+
 function displayResult(result) {
     const display = document.querySelector("div.display");
     display.innerText = result;
@@ -35,8 +39,18 @@ function divide(num1, num2) {
 }
 
 function operate(num1, operator, num2) { 
-    firstNumber = parseInt(num1);
-    secondNumber = parseInt(num2);
+    if (isInt(num1)) {
+        firstNumber = parseInt(num1);
+    }
+    else {
+        firstNumber = num1;
+    }
+    if (isInt(num2)) {
+        secondNumber = parseInt(num2);
+    }
+    else {
+        secondNumber = num2;
+    }
     switch (operator) {
         case '+': return add(firstNumber, secondNumber);
         case '-': return subtract(firstNumber, secondNumber);
@@ -128,16 +142,19 @@ percentageBtn.addEventListener("click", () => {
     console.log("percentage button clicked");
     console.log(storedValues);
     if (storedValues.num1 && !storedValues.num2) {
-        storedValues.num1 = storedValues.num1 / 100;
+        storedValues.num1 = parseInt(storedValues.num1) / 100;
         displayResult(storedValues.num1);
     }
     else if (storedValues.num1 && storedValues.num2) { 
-        storedValues.num2 = storedValues.num2 / 100;
+        storedValues.num2 = parseInt(storedValues.num2) / 100;
         displayResult(storedValues.num2);
     }
     else {
         console.log("unhandled case for percentage button");
     }
 });
+
+//TODO: figure out how to allow for decimal/floating point calculations
+// probably need an 'if' statement in my operate function?
 
 
