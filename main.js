@@ -154,7 +154,17 @@ percentageBtn.addEventListener("click", () => {
     }
 });
 
-//TODO: figure out how to allow for decimal/floating point calculations
-// probably need an 'if' statement in my operate function?
+// event listener for +/- button
+const signButton = document.querySelector("button.sign");
+signButton.addEventListener("click", () => {
+    if (!storedValues.num2) {
+        storedValues.num1 = storedValues.num1 * -1;
+        displayResult(storedValues.num1);
+    }
+    else {
+        storedValues.num2 = storedValues.num2 * -1;
+        displayResult(storedValues.num2);
+    }
+});
 
 
