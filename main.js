@@ -57,13 +57,13 @@ function operate(num1, operator, num2) {
         firstNumber = parseInt(num1);
     }
     else {
-        firstNumber = num1;
+        firstNumber = parseFloat(num1);
     }
     if (isInt(num2)) {
         secondNumber = parseInt(num2);
     }
     else {
-        secondNumber = num2;
+        secondNumber = parseFloat(num2);
     }
     switch (operator) {
         case '+': return add(firstNumber, secondNumber);
@@ -196,9 +196,24 @@ signButton.addEventListener("click", () => {
     }
 });
 
+const decimalButton = document.querySelector("button.decimal");
+decimalButton.addEventListener("click", (e) => {
+    if (!storedValues.operator) {
+        if (storedValues.num1.indexOf('.') === -1) {
+            console.log("no decimal in num1");
+            populateDisplay(e);
+        }
+    } else {
+        if (storedValues.num2.indexOf('.') === -1) {
+            console.log("no decimal in num2");
+            populateDisplay(e);
+        } 
+    }
+});
 // fix broken percentage button
 // can't press more than once currently
 // I think value is getting rounded
 // also when num1 is 0 !storedValues.num1 is false
 // the rounding is probably a result of using the parseInt function
+// broke ability to add decimals 1.2 + 1 = 1.21
 
