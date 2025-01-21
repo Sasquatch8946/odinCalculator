@@ -1,7 +1,3 @@
-* {
-    border: solid 2px red;
-}
-
 body {
     display: flex;
     justify-content: center;

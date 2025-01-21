@@ -167,4 +167,7 @@ signButton.addEventListener("click", () => {
     }
 });
 
+// TODO: make equals button event listener check that all necessary values
+// are present (going through list of bugs to watch out for on Odin)
+
 
