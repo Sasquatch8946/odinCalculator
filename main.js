@@ -5,6 +5,20 @@ let storedValues = {
     prevResult: null
 }
 
+function resetValues() { 
+    storedValues.num1 = '';
+    storedValues.operator = null;
+    storedValues.num2 = '';
+}
+
+function isDivisionByZero() { 
+    if (storedValues.operator == '/' && storedValues.num2 == 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 function isInt(num) {
     return num % 1 === 0;
 }
@@ -140,8 +154,15 @@ equalBtn.addEventListener("click", () => {
         console.log("operator selected but no second number; cannot calulate");
         return;
     }
-    calculate();
-    storedValues.operator = null;
+
+    if (isDivisionByZero()) {
+        displayResult("YOU CAN'T DO THAT >:(");
+        resetValues();
+    } else {
+        calculate();
+        storedValues.operator = null;
+    }
+    
 });
 
 const percentageBtn = document.querySelector("button.percent");
@@ -174,7 +195,5 @@ signButton.addEventListener("click", () => {
     }
 });
 
-// TODO: make equals button event listener check that all necessary values
-// are present (going through list of bugs to watch out for on Odin)
 
 
