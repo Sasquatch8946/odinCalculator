@@ -56,7 +56,7 @@ function operate(num1, operator, num2) {
         case '-': return subtract(firstNumber, secondNumber);
         case '/': return divide(firstNumber, secondNumber);
         case '*': return multiply(firstNumber, secondNumber);
-        default: throw('ERROR');
+        default: console.log('Unexpected selection made. Equals button prematurely pressed?');
     }
 
 }
@@ -113,7 +113,7 @@ operatorBtns.forEach((btn) => {
     }
     // this assumes at least a second or nth iteration of the previous scenario
     // user keeps clicking operator without clicking equals sign
-    else if (storedValues.operator) {
+    else if (storedValues.operator && storedValues.prevResult) {
         console.log("calculating result of ongoing calculation");
         storedValues.num1 = storedValues.prevResult;
         calculate();
@@ -131,7 +131,14 @@ operatorBtns.forEach((btn) => {
 const equalBtn = document.querySelector("button.equals");
 equalBtn.addEventListener("click", () => {
     if (!storedValues.num1 && storedValues.operator && storedValues.num2 && storedValues.prevResult) {
+        console.log("making the previous result the first number");
         storedValues.num1 = storedValues.prevResult;
+    } else if (!storedValues.operator && !storedValues.num2) {
+        console.log("operator and second number not given; cannot calculate");
+        return;
+    } else if (!storedValues.num2) { 
+        console.log("operator selected but no second number; cannot calulate");
+        return;
     }
     calculate();
     storedValues.operator = null;
