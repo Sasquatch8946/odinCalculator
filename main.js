@@ -127,7 +127,8 @@ operatorBtns.forEach((btn) => {
     }
     // this assumes at least a second or nth iteration of the previous scenario
     // user keeps clicking operator without clicking equals sign
-    else if (storedValues.operator && storedValues.prevResult) {
+    // checking for num2 to allow users to change the operator
+    else if (storedValues.operator && storedValues.prevResult && storedValues.num2) {
         console.log("calculating result of ongoing calculation");
         storedValues.num1 = storedValues.prevResult;
         calculate();
