@@ -210,10 +210,21 @@ decimalButton.addEventListener("click", (e) => {
         } 
     }
 });
-// fix broken percentage button
-// can't press more than once currently
-// I think value is getting rounded
-// also when num1 is 0 !storedValues.num1 is false
-// the rounding is probably a result of using the parseInt function
-// broke ability to add decimals 1.2 + 1 = 1.21
+
+const backButton = document.querySelector('button.back');
+backButton.addEventListener("click", () => {
+    if (!storedValues.operator && storedValues.num1) {
+        let nums = storedValues.num1.toString().split('');
+        nums.pop()
+        let newNum = nums.join('');
+        storedValues.num1 = newNum;
+        displayResult(newNum);
+    } else {
+        let nums = storedValues.num2.toString().split('');
+        nums.pop()
+        let newNum = nums.join('');
+        storedValues.num2 = newNum
+        displayResult(newNum);
+    }
+});
 
