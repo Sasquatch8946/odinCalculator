@@ -91,6 +91,15 @@ function populateDisplay(event) {
     }
 }
 
+function clearAll() {
+    const display = document.querySelector("div.display");
+    display.innerText = '';
+    storedValues.num1 = '';
+    storedValues.num2 = '';
+    storedValues.operator = null;
+    storedValues.prevResult = null;
+}
+
 // add event listeners to number buttons so they populate display
 const btns = document.querySelectorAll("button.number");
 btns.forEach((btn) => {
@@ -99,14 +108,7 @@ btns.forEach((btn) => {
 
 // add special event listener to clear button 
 const clearBtn = document.querySelector("button.clear");
-clearBtn.addEventListener("click", () => {
-    const display = document.querySelector("div.display");
-    display.innerText = '';
-    storedValues.num1 = '';
-    storedValues.num2 = '';
-    storedValues.operator = null;
-    storedValues.prevResult = null;
-});
+clearBtn.addEventListener("click", clearAll);
 
 // add distinct event listener for operators
 const operatorBtns = document.querySelectorAll("button.operator");
@@ -226,5 +228,10 @@ backButton.addEventListener("click", () => {
         storedValues.num2 = newNum
         displayResult(newNum);
     }
+});
+
+// keyboard support
+document.addEventListener("keydown", ()=> {
+
 });
 
