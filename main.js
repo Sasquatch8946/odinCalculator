@@ -110,7 +110,7 @@ function clearAll() {
     storedValues.prevResult = null;
 }
 
-function startOperation(e) {
+function startOperation(e, eventType="click") {
     console.log(storedValues);
     // this if statement assumes that user previously used equals button
     // our event handler clears all vars except prevResult
@@ -132,6 +132,7 @@ function startOperation(e) {
         storedValues.num1 = storedValues.prevResult;
         calculate();
     }
+    // operator selected without num1 or prevResult
     else if (!storedValues.num1) {
         console.log("operator clicked without num1 being entered, do nothing");
         return;
@@ -139,7 +140,17 @@ function startOperation(e) {
     else {
         console.log("unhandled case in operator button event")
     }
-    storedValues.operator = e.target.innerText;
+
+    // store operator differently based on event type
+    switch (eventType) {
+        case "click":
+            storedValues.operator = e.target.innerText;
+            break;
+        case "keydown":
+            storedValues.operator = e.key;
+            break;
+    }
+    
     console.log("operator was selected");
     console.log(storedValues);
 }
@@ -231,12 +242,14 @@ function processKeyPress(event) {
     let operators = ['+', '-', '/', '*'];
     let equalsSign = ['='];
     let back = ['Backspace'];
-    if (nums.indexOf(value) !== -1) {
+    if (nums.indexOf(parseInt(value)) !== -1) {
         console.log("key press is a number");
         populateDisplay(event);
     }
     else if (operators.indexOf(value) > -1) {
-        startOperation(event);
+        console.log("key press is an operator");
+        console.log(event);
+        startOperation(event, "keydown");
     } else if (equalsSign.indexOf(value) > -1) {
         startEqualsOperation();
     } else if (back.indexOf(value) > -1) {
@@ -285,4 +298,7 @@ backButton.addEventListener("click", startDeletion);
 // that the key corresponds with
 document.addEventListener("keydown", processKeyPress);
 
-// TODO: make sure operator button does nothing without num1 being entered
+// TODO: finish building out keyboard support
+// for plus sign key need to use e.key instead of e.target.innerText
+// startOperation needs to get value differently based on type of event, i.e.
+// keypress vs. click
