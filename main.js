@@ -75,19 +75,29 @@ function operate(num1, operator, num2) {
 
 }
 
-function populateDisplay(event) {
-    const btn = event.target;
+function storeEventData(value) {
+    console.log(`event data value: ${value}`);
+    console.log(typeof(value));
     const display = document.querySelector("div.display");
-    console.log(btn.innerText);
     if (!storedValues.operator) {
-        storedValues.num1 += btn.innerText;
+        storedValues.num1 += value;
         display.innerText = storedValues.num1;
         console.log(storedValues);
     }
     else {
-        storedValues.num2 += btn.innerText;
+        storedValues.num2 += value;
         display.innerText = storedValues.num2;
         console.log(storedValues);
+    }
+}
+
+function populateDisplay(event) {
+    if (event.type == 'click') {
+        const btn = event.target;
+        const val = btn.innerText;
+        storeEventData(val);
+    } else if (event.type == 'keydown') {
+        storeEventData(event.key);
     }
 }
 
@@ -100,20 +110,7 @@ function clearAll() {
     storedValues.prevResult = null;
 }
 
-// add event listeners to number buttons so they populate display
-const btns = document.querySelectorAll("button.number");
-btns.forEach((btn) => {
-    btn.addEventListener("click", populateDisplay);
-});
-
-// add special event listener to clear button 
-const clearBtn = document.querySelector("button.clear");
-clearBtn.addEventListener("click", clearAll);
-
-// add distinct event listener for operators
-const operatorBtns = document.querySelectorAll("button.operator");
-operatorBtns.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+function startOperation(e) {
     console.log(storedValues);
     // this if statement assumes that user previously used equals button
     // our event handler clears all vars except prevResult
@@ -135,18 +132,19 @@ operatorBtns.forEach((btn) => {
         storedValues.num1 = storedValues.prevResult;
         calculate();
     }
+    else if (!storedValues.num1) {
+        console.log("operator clicked without num1 being entered, do nothing");
+        return;
+    }
     else {
         console.log("unhandled case in operator button event")
     }
     storedValues.operator = e.target.innerText;
     console.log("operator was selected");
     console.log(storedValues);
-})});
+}
 
-// add event listener for equals sign that calls operate function
-// and performs calculation
-const equalBtn = document.querySelector("button.equals");
-equalBtn.addEventListener("click", () => {
+function startEqualsOperation() {
     if (!storedValues.num1 && storedValues.operator && storedValues.num2 && storedValues.prevResult) {
         console.log("making the previous result the first number");
         storedValues.num1 = storedValues.prevResult;
@@ -166,10 +164,9 @@ equalBtn.addEventListener("click", () => {
         storedValues.operator = null;
     }
     
-});
+}
 
-const percentageBtn = document.querySelector("button.percent");
-percentageBtn.addEventListener("click", () => {
+function calculatePercent() {
     console.log("percentage button clicked");
     console.log(storedValues);
     if (storedValues.num1 && !storedValues.num2) {
@@ -183,11 +180,9 @@ percentageBtn.addEventListener("click", () => {
     else {
         console.log("unhandled case for percentage button");
     }
-});
+}
 
-// event listener for +/- button
-const signButton = document.querySelector("button.sign");
-signButton.addEventListener("click", () => {
+function changeSign() {
     if (!storedValues.num2) {
         storedValues.num1 = storedValues.num1 * -1;
         displayResult(storedValues.num1);
@@ -196,10 +191,9 @@ signButton.addEventListener("click", () => {
         storedValues.num2 = storedValues.num2 * -1;
         displayResult(storedValues.num2);
     }
-});
+}
 
-const decimalButton = document.querySelector("button.decimal");
-decimalButton.addEventListener("click", (e) => {
+function insertDecimal(e) {
     if (!storedValues.operator) {
         if (storedValues.num1.indexOf('.') === -1) {
             console.log("no decimal in num1");
@@ -211,10 +205,9 @@ decimalButton.addEventListener("click", (e) => {
             populateDisplay(e);
         } 
     }
-});
+}
 
-const backButton = document.querySelector('button.back');
-backButton.addEventListener("click", () => {
+function startDeletion() {
     if (!storedValues.operator && storedValues.num1) {
         let nums = storedValues.num1.toString().split('');
         nums.pop()
@@ -228,10 +221,68 @@ backButton.addEventListener("click", () => {
         storedValues.num2 = newNum
         displayResult(newNum);
     }
+}
+
+function processKeyPress(event) {
+    value = event.key;
+    console.log(`KEY PRESS: ${value}`);
+    console.log(typeof(value));
+    let nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let operators = ['+', '-', '/', '*'];
+    let equalsSign = ['='];
+    let back = ['Backspace'];
+    if (nums.indexOf(value) !== -1) {
+        console.log("key press is a number");
+        populateDisplay(event);
+    }
+    else if (operators.indexOf(value) > -1) {
+        startOperation(event);
+    } else if (equalsSign.indexOf(value) > -1) {
+        startEqualsOperation();
+    } else if (back.indexOf(value) > -1) {
+        startDeletion();
+    }
+}
+// add event listeners to number buttons so they populate display
+const btns = document.querySelectorAll("button.number");
+btns.forEach((btn) => {
+    btn.addEventListener("click", populateDisplay);
 });
+
+// add special event listener to clear button 
+const clearBtn = document.querySelector("button.clear");
+clearBtn.addEventListener("click", clearAll);
+
+// add distinct event listener for operators
+const operatorBtns = document.querySelectorAll("button.operator");
+operatorBtns.forEach((btn) => {
+    btn.addEventListener("click", startOperation)
+});
+
+// add event listener for equals sign that calls operate function
+// and performs calculation
+const equalBtn = document.querySelector("button.equals");
+equalBtn.addEventListener("click", startEqualsOperation);
+
+// TODO
+// currently can't hit 'equals' and then 'percent'
+// in other words can convert prevResult to percent
+const percentageBtn = document.querySelector("button.percent");
+percentageBtn.addEventListener("click", calculatePercent);
+
+// event listener for +/- button
+const signButton = document.querySelector("button.sign");
+signButton.addEventListener("click", () => changeSign);
+
+const decimalButton = document.querySelector("button.decimal");
+decimalButton.addEventListener("click", insertDecimal);
+
+const backButton = document.querySelector('button.back');
+backButton.addEventListener("click", startDeletion);
 
 // keyboard support
-document.addEventListener("keydown", ()=> {
+// trigger different function depending on the type of button
+// that the key corresponds with
+document.addEventListener("keydown", processKeyPress);
 
-});
-
+// TODO: make sure operator button does nothing without num1 being entered
