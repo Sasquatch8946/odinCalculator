@@ -28,6 +28,11 @@ function displayResult(result) {
     display.innerText = result;
 }
 
+function updateDisplay(value) {
+    const display = document.querySelector("div.display");
+    display.innerText += value;
+}
+
 function calculate() { 
     let result = operate(storedValues.num1, storedValues.operator, storedValues.num2);
     storedValues.prevResult = result;
@@ -81,12 +86,12 @@ function storeEventData(value) {
     const display = document.querySelector("div.display");
     if (!storedValues.operator) {
         storedValues.num1 += value;
-        display.innerText = storedValues.num1;
+        display.innerText += value;
         console.log(storedValues);
     }
     else {
         storedValues.num2 += value;
-        display.innerText = storedValues.num2;
+        display.innerText += value;
         console.log(storedValues);
     }
 }
@@ -145,12 +150,14 @@ function startOperation(e, eventType="click") {
     switch (eventType) {
         case "click":
             storedValues.operator = e.target.innerText;
+            updateDisplay(e.target.innerText);
             break;
         case "keydown":
             storedValues.operator = e.key;
+            updateDisplay(e.key);
             break;
     }
-    
+   
     console.log("operator was selected");
     console.log(storedValues);
 }
